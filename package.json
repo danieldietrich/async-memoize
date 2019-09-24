@@ -1,0 +1,47 @@
+{
+  "name": "@danieldietrich/async-memoize",
+  "version": "0.0.0",
+  "description": "Nifty async function memoization",
+  "keywords": [
+    "async-memoize",
+    "typed",
+    "types",
+    "typescript"
+  ],
+  "engines": {
+    "node": ">=10.0.0"
+  },
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "clean": "rm -fr dist",
+    "build": "npm run clean && npm run lint  && tsc --project tsconfig.build.json",
+    "lint": "tslint --project tsconfig.json",
+    "prepare": "npm test && npm run build",
+    "test": "jest --coverage"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/danieldietrich/async-memoize"
+  },
+  "homepage": "https://github.com/danieldietrich/async-memoize",
+  "bugs": "https://github.com/danieldietrich/async-memoize/issues",
+  "author": {
+    "name": "Daniel Dietrich",
+    "email": "cafebab3@gmail.com",
+    "url": "https://danieldietrich.dev"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "@types/jest": "^24.0.18",
+    "@types/node": "^12.7.7",
+    "codecov": "^3.6.1",
+    "jest": "^24.9.0",
+    "ts-jest": "^24.1.0",
+    "tslint": "^5.20.0",
+    "typescript": "^3.6.3"
+  }
+}
