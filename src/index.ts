@@ -41,7 +41,7 @@ namespace memoize {
     export type Store<K, V> = {
         get(key: K): Promise<V>;
         set(key: K, value: V): Promise<V>;
-        toKey(...args: unknown[]): Promise<K>;
+        toKey(args: unknown[]): Promise<K>;
     };
 
     // an ever growing in-memory store (be aware of memory leaks!)
@@ -55,9 +55,7 @@ namespace memoize {
                 cache.set(key, value);
                 resolve(value);
             }),
-            toKey: (...args) => new Promise((resolve) => {
-                resolve(JSON.stringify(args));
-            }),
+            toKey: (args) => Promise.resolve(JSON.stringify(args)),
         };
     }
 }

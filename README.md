@@ -64,12 +64,25 @@ The memoization function is highly composable.
 ```ts
 import memoize, { Store } from 'memoize';
 
-const myStore: Store<string, ReturnType<getLicense>> = {
+const es6Store: Store<string, ReturnType<getLicense>> = {
+    get: (key) => new Promise((resolve, reject) => {
+        const value = /* TODO: retrieve value */
+        (value === undefined) ? reject() : resolve(value);
+    }),
+    set: (key, value) => new Promise((resolve) => {
+        /* TODO: store value */;
+        resolve(value);
+    }),
+    toKey: (args) => Promise.resolve(JSON.stringify(args))
+};
+
+const es8Store: Store<string, ReturnType<getLicense>> = {
     get: async (key) => /* TODO: retrieve value */,
     set: async (key, value) => { /* TODO: store value */; return value; }
-    toKey: async (...args) => JSON.stringify(args);
+    toKey: async (args) => JSON.stringify(args);
 };
-const getLicenseMemoized = memoize(memoize(getLicense, myStore));
+
+const getLicenseMemoized = memoize(memoize(getLicense, es8Store));
 ```
 
 ---

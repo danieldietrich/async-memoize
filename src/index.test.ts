@@ -85,6 +85,9 @@ describe("Memoize", () => {
             setTimeout(() => resolve(mem()), 100);
         }));
     });
+});
+
+describe('memStore', () => {
 
     test('Should invalidate cache', async () => {
         const cache = new Map();
@@ -93,5 +96,17 @@ describe("Memoize", () => {
             cache.clear();
             setTimeout(() => resolve(mem()), 100);
         }));
+    });
+
+    test('Should serialize empty argument list', async () => {
+        const store = memStore();
+        const args: [] = [];
+        expect(await store.toKey(args)).toBe(JSON.stringify(args));
+    });
+
+    test('Should serialize non-empty argument list', async () => {
+        const store = memStore();
+        const args = ['Hi', true];
+        expect(await store.toKey(args)).toBe(JSON.stringify(args));
     });
 });
