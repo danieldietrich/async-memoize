@@ -19,7 +19,7 @@ Features:
 * Inversion of control: store is injected
 * No active cache invalidation, resources are handled by the caller
 * Composable: a memoized function can be memoized using a different store
-* Usr-defined cache-key creation
+* User-defined cache-key creation
 
 Caution:
 
@@ -73,7 +73,9 @@ const es6Store: Store<string, ReturnType<getLicense>> = {
         /* TODO: store value */;
         resolve(value);
     }),
-    toKey: (args) => Promise.resolve(JSON.stringify(args))
+    toKey: (args) => new Promise((resolve) => {
+        resolve(JSON.stringify(args));
+    })
 };
 
 const es8Store: Store<string, ReturnType<getLicense>> = {
