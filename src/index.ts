@@ -30,7 +30,7 @@ function memoize<A extends unknown[], K, V>(fn: (...args: A) => Promise<V>, stor
             ? fn(...args)
             : get(key).catch(() =>
                 fn(...args).then(value =>
-                    set(key, value).catch(() => value),
+                    set(key, value).then(() => value).catch(() => value),
                 ),
             ),
         );
@@ -38,9 +38,10 @@ function memoize<A extends unknown[], K, V>(fn: (...args: A) => Promise<V>, stor
 
 namespace memoize {
 
+    // Just reject() without args, errors are not needed.
     export type Store<K, V> = {
-        get(key: K): Promise<V>;
-        set(key: K, value: V): Promise<V>;
+        get(key: K): Promise<V>; // rejected if not found
+        set(key: K, value: V): Promise<void>; // resolved on success, rejected on failure
         toKey(args: unknown[]): Promise<K>;
     };
 
@@ -53,9 +54,11 @@ namespace memoize {
             }),
             set: (key, value) => new Promise((resolve) => {
                 cache.set(key, value);
-                resolve(value);
+                resolve();
             }),
-            toKey: (args) => Promise.resolve(JSON.stringify(args)),
+            toKey: (args) => new Promise((resolve) => {
+                return resolve(JSON.stringify(args));
+            }),
         };
     }
 }
