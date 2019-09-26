@@ -47,7 +47,7 @@ describe("Memoize", () => {
         }
         const mem = memoize(fn, {
             get: (key) => (i === 1) ? Promise.reject() : Promise.resolve(i),
-            set: (key, value) => Promise.resolve(value),
+            set: (key, value) => Promise.resolve(),
             toKey: (...args) => Promise.resolve(JSON.stringify(args)),
         });
         await expect(mem()).resolves.toBe(1);
@@ -61,7 +61,7 @@ describe("Memoize", () => {
         }
         const mem = memoize(fn, {
             get: (key) => Promise.resolve(0),
-            set: (key, value) => Promise.resolve(0),
+            set: (key, value) => Promise.resolve(),
             toKey: (...args) => Promise.reject(),
         });
         await expect(mem()).resolves.toBe(1);
