@@ -13,7 +13,7 @@ describe("Memoize", () => {
 
     test('Should memoize a deferred value', async () => {
         async function fn(): Promise<number> {
-            return new Promise((resolve, _) => {
+            return new Promise((resolve) => {
                 setTimeout(() => resolve(1), 250);
             });
         }
@@ -46,8 +46,8 @@ describe("Memoize", () => {
             return i++;
         }
         const mem = memoize(fn, {
-            get: (key) => (i === 1) ? Promise.reject() : Promise.resolve(i),
-            set: (key, value) => Promise.resolve(),
+            get: () => (i === 1) ? Promise.reject() : Promise.resolve(i),
+            set: () => Promise.resolve(),
             toKey: (...args) => Promise.resolve(JSON.stringify(args)),
         });
         await expect(mem()).resolves.toBe(1);
@@ -60,9 +60,9 @@ describe("Memoize", () => {
             return 1;
         }
         const mem = memoize(fn, {
-            get: (key) => Promise.resolve(0),
-            set: (key, value) => Promise.resolve(),
-            toKey: (...args) => Promise.reject(),
+            get: () => Promise.resolve(0),
+            set: () => Promise.resolve(),
+            toKey: () => Promise.reject(),
         });
         await expect(mem()).resolves.toBe(1);
     });
@@ -72,16 +72,16 @@ describe("Memoize", () => {
             return 1;
         }
         const mem = memoize(fn, {
-            get: (key) => Promise.reject(),
-            set: (key, value) => Promise.reject(),
-            toKey: (...args) => Promise.resolve(''),
+            get: () => Promise.reject(),
+            set: () => Promise.reject(),
+            toKey: () => Promise.resolve(''),
         });
         await expect(mem()).resolves.toBe(1);
     });
 
     test('Should memoize Date.prototype.now', async () => {
         const mem = memoize(async () => Date.now());
-        expect(await mem()).toEqual(await new Promise((resolve, reject) => {
+        expect(await mem()).toEqual(await new Promise((resolve) => {
             setTimeout(() => resolve(mem()), 100);
         }));
     });
@@ -92,7 +92,7 @@ describe('memStore', () => {
     test('Should invalidate cache', async () => {
         const cache = new Map();
         const mem = memoize(async () => Date.now(), memStore(cache));
-        expect(await mem()).not.toEqual(await new Promise((resolve, reject) => {
+        expect(await mem()).not.toEqual(await new Promise((resolve) => {
             cache.clear();
             setTimeout(() => resolve(mem()), 100);
         }));
