@@ -1,6 +1,6 @@
 {
   "name": "@danieldietrich/async-memoize",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "Nifty async function memoization",
   "keywords": [
     "async-memoize",
